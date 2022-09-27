@@ -27,4 +27,5 @@ export const subManagerAbi = [
     "function charge(uint256 subscriptionTokenId) external",
     'function cancelSubscription(uint256 subscriptionTokenId) external',
     'function disablePlan(uint256 merchantTokenId, uint256 planIndex) external',
+    'function planManager() view returns(string)',
 ]
