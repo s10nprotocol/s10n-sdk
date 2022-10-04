@@ -1,5 +1,5 @@
 import type { Signer } from '@ethersproject/abstract-signer'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import { contractAddressMap, subManagerAbi } from './constants'
 
 export type S10nChain = 'Mumbai' | 'Polygon'
