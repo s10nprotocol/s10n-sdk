@@ -22,10 +22,14 @@ export const contractAddressMap = {
 export const subManagerAbi = [
     "function createMerchant(string memory name) external returns (uint256)",
     "function updateMerchant(uint256 merchantTokenId,string memory name) external",
-    "function createPlan(uint256 merchantTokenId, string memory name, string memory description, uint8 billingPeriod, address paymentToken, address payeeAddress, uint256 pricePerBillingPeriod, bool isSBT, uint maxTermLength) external",
+    "function createPlan(uint256[] memory uints, address[] memory addresses, string[] memory strings) external",
     "function createSubscription(uint256 merchantTokenId, uint256 planIndex) external",
     "function charge(uint256 subscriptionTokenId) external",
     'function cancelSubscription(uint256 subscriptionTokenId) external',
     'function disablePlan(uint256 merchantTokenId, uint256 planIndex) external',
     'function planManager() view returns(string)',
+]
+
+export const planManagerAbi = [
+    ""
 ]
