@@ -4,6 +4,19 @@ import { contractAddressMap, subManagerAbi } from './constants'
 
 export type S10nChain = 'Mumbai' | 'Polygon'
 
+interface CreatePlanConf {
+    merchantTokenId: number;
+    name: string;
+    desc: string;
+    billingPeriod: number;
+    paymentToken: string;
+    payeeAddress: string;
+    pricePerBillingPeriod: string;
+    isSBT: boolean;
+    maxTermLength: number;
+    canResubscribe: boolean
+}
+
 
 export class S10nSDK {
     private _chain: S10nChain = 'Polygon'
@@ -37,9 +50,25 @@ export class S10nSDK {
         return this._subManagerContract.createMerchant(merchantId, name)
     }
 
-    public createPlan(opt: { merchantTokenId: number; name: string; desc: string; billingPeriod: number; paymentToken: string; payeeAddress: string; pricePerBillingPeriod: string; isSBT: boolean; maxTermLength: number; canResubscribe: boolean }) {
-        console.log('start create plan')
-        return this._subManagerContract.createPlan([opt.merchantTokenId, opt.billingPeriod, opt.pricePerBillingPeriod, opt.maxTermLength, opt.isSBT ? 1 : 0, opt.canResubscribe ? 1 : 0], [opt.paymentToken, opt.payeeAddress], [opt.name, opt.desc])
+    public createPlan(opt: CreatePlanConf) {
+        return this._subManagerContract.createPlan(
+            [
+                opt.merchantTokenId,
+                opt.billingPeriod,
+                opt.pricePerBillingPeriod,
+                opt.maxTermLength,
+                opt.isSBT ? 1 : 0,
+                opt.canResubscribe ? 1 : 0
+            ],
+            [
+                opt.paymentToken,
+                opt.payeeAddress
+            ],
+            [
+                opt.name,
+                opt.desc
+            ]
+        )
     }
 
     public charge(subscriptionTokenId: number) {
@@ -52,6 +81,10 @@ export class S10nSDK {
 
     public disablePlan(merchantTokenId: number, planIndex: number) {
         return this._subManagerContract.disablePlan(merchantTokenId, planIndex)
+    }
+
+    public planManager() {
+        return this._subManagerContract.planManager()
     }
 
     public chain(): S10nChain {
