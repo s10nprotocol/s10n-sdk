@@ -1,6 +1,6 @@
 import type { Signer } from '@ethersproject/abstract-signer'
-import { Contract } from 'ethers'
-import { contractAddressMap, subManagerAbi } from './constants'
+import { BigNumber, Contract } from 'ethers'
+import { contractAddressMap, subManagerAbi, subTokenManagerAbi } from './constants'
 
 export type S10nChain = 'Mumbai' | 'Polygon'
 
@@ -22,21 +22,22 @@ export class S10nSDK {
     private _chain: S10nChain = 'Polygon'
     private _signer: Signer;
     private _subManagerContract: Contract
-    // private _planManagerContract: Contract | null = null
+    public version = '0.0.7'
+    private _subTokenManagerContract: Contract | null = null
 
 
     constructor(chain: S10nChain, signer: Signer) {
         this._chain = chain
         this._signer = signer
         this._subManagerContract = new Contract(contractAddressMap[chain].SubManager, subManagerAbi, signer)
-        // this.init()
+        this.init()
 
     }
 
-    // async init() {
-        // const planManager = await this._subManagerContract.planManager()
-        // this._planManagerContract = new Contract(planManager, planManagerAbi, this._signer)
-    // }
+    async init() {
+        const subTokenManagerAddress = await this.subTokenManager()
+        this._subTokenManagerContract = new Contract(subTokenManagerAddress, subTokenManagerAbi, this._signer)
+    }
 
     public createSubscription(merchantId: number, planIndex: number) {
         return this._subManagerContract.createSubscription(merchantId, planIndex)
@@ -83,8 +84,20 @@ export class S10nSDK {
         return this._subManagerContract.disablePlan(merchantTokenId, planIndex)
     }
 
-    public planManager() {
+    public planManager(): Promise<string> {
         return this._subManagerContract.planManager()
+    }
+
+    public subTokenManager(): Promise<string> {
+        return this._subManagerContract.subTokenManager()
+    }
+
+    public getMerchantSubscriptionTotal(merchantTokenId: number): Promise<BigNumber> {
+        return this._subManagerContract.getMerchantSubscriptionTotal(merchantTokenId)
+    }
+
+    public getMerchantPlanSubscriptionTotal(merchantTokenId: number, planIndex: number): Promise<BigNumber> {
+        return this._subManagerContract.getMerchantSubscriptionTotal(merchantTokenId, planIndex)
     }
 
     public chain(): S10nChain {
@@ -94,4 +107,9 @@ export class S10nSDK {
     public signer(): Signer {
         return this._signer
     }
+
+    public getSubscriptionTokenUri(subscriptionTokenId: number): Promise<string> {
+        return this._subTokenManagerContract?.tokenURI(subscriptionTokenId)
+    }
+
 }
