@@ -1,6 +1,7 @@
 import type { Signer } from '@ethersproject/abstract-signer'
+import type {Provider} from '@ethersproject/abstract-provider'
 import { BigNumber, Contract } from 'ethers'
-import { contractAddressMap, subManagerAbi, subTokenManagerAbi } from './constants'
+import { contractAddressMap, subManagerAbi, subTokenManagerAbi, subInfoManagerAbi } from './constants'
 
 export type S10nChain = 'Mumbai' | 'Polygon'
 
@@ -20,23 +21,25 @@ interface CreatePlanConf {
 
 export class S10nSDK {
     private _chain: S10nChain = 'Polygon'
-    private _signer: Signer;
+    private _signer: Signer | Provider;
     private _subManagerContract: Contract
     public version = '0.0.7'
     private _subTokenManagerContract: Contract | null = null
+    private _subInfoManagerContract: Contract | null = null
 
 
-    constructor(chain: S10nChain, signer: Signer) {
+    constructor(chain: S10nChain, signer: Signer | Provider) {
         this._chain = chain
         this._signer = signer
         this._subManagerContract = new Contract(contractAddressMap[chain].SubManager, subManagerAbi, signer)
         this.init()
-
     }
 
     async init() {
         const subTokenManagerAddress = await this.subTokenManager()
         this._subTokenManagerContract = new Contract(subTokenManagerAddress, subTokenManagerAbi, this._signer)
+        const subInfoManagerAddress = await this.subInfoManager()
+        this._subInfoManagerContract = new Contract(subInfoManagerAddress, subInfoManagerAbi, this._signer)
     }
 
     public createSubscription(merchantId: number, planIndex: number) {
@@ -92,6 +95,10 @@ export class S10nSDK {
         return this._subManagerContract.subTokenManager()
     }
 
+    public subInfoManager(): Promise<string> {
+        return this._subManagerContract.subInfoManager()
+    }
+
     public getMerchantSubscriptionTotal(merchantTokenId: number): Promise<BigNumber> {
         return this._subManagerContract.getMerchantSubscriptionTotal(merchantTokenId)
     }
@@ -104,12 +111,20 @@ export class S10nSDK {
         return this._chain
     }
 
-    public signer(): Signer {
+    public signer(): Signer | Provider {
         return this._signer
     }
 
     public getSubscriptionTokenUri(subscriptionTokenId: number): Promise<string> {
         return this._subTokenManagerContract?.tokenURI(subscriptionTokenId)
+    }
+
+    public async getSubInfo(subscriptionTokenId: number): Promise<[BigNumber,BigNumber,BigNumber,BigNumber,BigNumber,BigNumber,boolean]>{
+        if (!this._subInfoManagerContract) {
+            await this.init()
+        }
+        const result = await this._subInfoManagerContract?.getSubInfo(subscriptionTokenId)
+        return result
     }
 
 }
