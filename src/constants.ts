@@ -39,5 +39,5 @@ export const subTokenManagerAbi = [
 ];
 
 export const subInfoManagerAbi = [
-    'function getSubInfo(uint256 tokenId) view returns (uint256,uint256,uint256,uint256,uint256,bool)'
+    'function getSubInfo(uint256 tokenId) view returns (uint256,uint256,uint256,uint256,uint256,uint256,bool)'
 ]
