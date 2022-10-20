@@ -23,7 +23,6 @@ export class S10nSDK {
     private _chain: S10nChain = 'Polygon'
     private _signer: Signer | Provider;
     private _subManagerContract: Contract
-    public version = '0.0.7'
     private _subTokenManagerContract: Contract | null = null
     private _subInfoManagerContract: Contract | null = null
 
@@ -31,7 +30,7 @@ export class S10nSDK {
     constructor(chain: S10nChain, signer: Signer | Provider) {
         this._chain = chain
         this._signer = signer
-        this._subManagerContract = new Contract(contractAddressMap[chain].SubManager, subManagerAbi, signer)
+        this._subManagerContract = new Contract(contractAddressMap[chain] , subManagerAbi, signer)
         this.init()
     }
 
