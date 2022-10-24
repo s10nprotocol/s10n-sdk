@@ -1,13 +1,3 @@
-export const SupportChain = {
-  Mumbai: 'Mumbai',
-  Polygon: 'Polygon',
-};
-
-export const contractAddressMap = {
-  Mumbai: '0xAb18CA8f1550F31582aD0E74820882f07d23aC0d',
-  Polygon: '0xAb18CA8f1550F31582aD0E74820882f07d23aC0d',
-};
-
 export const subManagerAbi = [
   'function getMerchantSubscriptionTotal(uint256 merchantTokenId) external view returns (uint256)',
   'function getMerchantPlanSubscriptionTotal(uint256 merchantTokenId, uint256 planIndex) external view returns (uint256)',
@@ -28,5 +18,5 @@ export const subTokenManagerAbi = [
 ];
 
 export const subInfoManagerAbi = [
-    'function getSubInfo(uint256 tokenId) view returns (uint256,uint256,uint256,uint256,uint256,uint256,bool)'
-]
+  'function getSubInfo(uint256 tokenId) view returns (uint256,uint256,uint256,uint256,uint256,uint256,bool)',
+];
