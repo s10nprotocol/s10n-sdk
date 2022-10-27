@@ -51,8 +51,8 @@ export class S10nSDK {
     return this._subManagerContract.createSubscription(merchantId, planIndex);
   }
 
-  public createMerchant(name: string) {
-    return this._subManagerContract.createMerchant(name);
+  public createMerchant(name: string, isSBT: boolean) {
+    return this._subManagerContract.createMerchant(name, isSBT);
   }
 
   public updateMerchant(merchantId: number, name: string) {
@@ -84,6 +84,10 @@ export class S10nSDK {
 
   public disablePlan(merchantTokenId: number, planIndex: number) {
     return this._subManagerContract.disablePlan(merchantTokenId, planIndex);
+  }
+
+  public enablePlan(merchantTokenId: number, planIndex: number) {
+    return this._subManagerContract.enablePlan(merchantTokenId, planIndex);
   }
 
   public planManager(): Promise<string> {
