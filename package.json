@@ -1,5 +1,5 @@
 {
-  "version": "0.0.7",
+  "version": "0.0.10",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "bufferutil": "^4.0.6",
     "ethers": "^5.7.1"

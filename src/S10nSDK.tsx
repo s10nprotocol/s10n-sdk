@@ -1,6 +1,7 @@
 import type { Signer } from '@ethersproject/abstract-signer';
 import type { Provider } from '@ethersproject/abstract-provider';
-import { BigNumber, Contract } from 'ethers';
+import { BigNumber } from '@ethersproject/bignumber';
+import { Contract } from '@ethersproject/contracts';
 import {
   subManagerAbi,
   subTokenManagerAbi,
@@ -23,6 +24,8 @@ interface CreatePlanConf {
 export class S10nSDK {
   private _signer: Signer | Provider;
   private _subManagerContract: Contract;
+  public merchantTokenManager: string | null = null;
+  public subscriptionTokenManager: string | null = null;
   private _subTokenManagerContract: Contract | null = null;
   private _subInfoManagerContract: Contract | null = null;
 
@@ -34,6 +37,7 @@ export class S10nSDK {
 
   async init() {
     const subTokenManagerAddress = await this.subTokenManager();
+    this.subscriptionTokenManager = subTokenManagerAddress;
     this._subTokenManagerContract = new Contract(
       subTokenManagerAddress,
       subTokenManagerAbi,
@@ -45,6 +49,8 @@ export class S10nSDK {
       subInfoManagerAbi,
       this._signer
     );
+    const merchantManager = await this.merchantManager();
+    this.merchantTokenManager = merchantManager;
   }
 
   public createSubscription(merchantId: number, planIndex: number) {
@@ -95,11 +101,15 @@ export class S10nSDK {
   }
 
   public subTokenManager(): Promise<string> {
-    return this._subManagerContract.subTokenManager();
+    return this._subManagerContract.subscriptionTokenManager();
   }
 
   public subInfoManager(): Promise<string> {
     return this._subManagerContract.subInfoManager();
+  }
+
+  public merchantManager(): Promise<string> {
+    return this._subManagerContract.merchantTokenManager();
   }
 
   public getMerchantSubscriptionTotal(

@@ -9,8 +9,9 @@ export const subManagerAbi = [
   'function cancelSubscription(uint256 subscriptionTokenId) external',
   'function enablePlan(uint256 merchantTokenId, uint256 planIndex) external',
   'function disablePlan(uint256 merchantTokenId, uint256 planIndex) external',
+  'function merchantTokenManager() view returns (address)',
   'function planManager() view returns (address)',
-  'function subTokenManager() view returns (address)',
+  'function subscriptionTokenManager() view returns (address)',
   'function subInfoManager() view returns (address)',
 ];
 
