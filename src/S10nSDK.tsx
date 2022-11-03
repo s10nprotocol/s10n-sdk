@@ -53,8 +53,8 @@ export class S10nSDK {
     this.merchantTokenManager = merchantManager;
   }
 
-  public createSubscription(merchantId: number, planIndex: number) {
-    return this._subManagerContract.createSubscription(merchantId, planIndex);
+  public merchantManager(): Promise<string> {
+    return this._subManagerContract.merchantTokenManager();
   }
 
   public createMerchant(name: string, isSBT: boolean) {
@@ -80,14 +80,6 @@ export class S10nSDK {
     );
   }
 
-  public charge(subscriptionTokenId: number) {
-    return this._subManagerContract.charge(subscriptionTokenId);
-  }
-
-  public cancelSubscription(subscriptionTokenId: number) {
-    return this._subManagerContract.cancelSubscription(subscriptionTokenId);
-  }
-
   public disablePlan(merchantTokenId: number, planIndex: number) {
     return this._subManagerContract.disablePlan(merchantTokenId, planIndex);
   }
@@ -96,8 +88,36 @@ export class S10nSDK {
     return this._subManagerContract.enablePlan(merchantTokenId, planIndex);
   }
 
+  public updatePlan(
+    merchantTokenId: number,
+    planIndex: number,
+    name: string,
+    description: string,
+    payeeAddress: string
+  ) {
+    return this._subManagerContract.updatePlan(
+      merchantTokenId,
+      planIndex,
+      name,
+      description,
+      payeeAddress
+    );
+  }
+
   public planManager(): Promise<string> {
     return this._subManagerContract.planManager();
+  }
+
+  public charge(subscriptionTokenId: number) {
+    return this._subManagerContract.charge(subscriptionTokenId);
+  }
+
+  public cancelSubscription(subscriptionTokenId: number) {
+    return this._subManagerContract.cancelSubscription(subscriptionTokenId);
+  }
+
+  public createSubscription(merchantId: number, planIndex: number) {
+    return this._subManagerContract.createSubscription(merchantId, planIndex);
   }
 
   public subTokenManager(): Promise<string> {
@@ -106,10 +126,6 @@ export class S10nSDK {
 
   public subInfoManager(): Promise<string> {
     return this._subManagerContract.subInfoManager();
-  }
-
-  public merchantManager(): Promise<string> {
-    return this._subManagerContract.merchantTokenManager();
   }
 
   public getMerchantSubscriptionTotal(

@@ -4,6 +4,7 @@ export const subManagerAbi = [
   'function createMerchant(string memory name, bool isSBT) external returns (uint256)',
   'function updateMerchant(uint256 merchantTokenId,string memory name) external',
   'function createPlan(uint256[] memory uints, address[] memory addresses, string[] memory strings) external',
+  'function updatePlan(uint256 merchantTokenId, uint256 planIndex, string memory name, string memory description, address payeeAddress) external',
   'function createSubscription(uint256 merchantTokenId, uint256 planIndex) external',
   'function charge(uint256 subscriptionTokenId) external',
   'function cancelSubscription(uint256 subscriptionTokenId) external',
