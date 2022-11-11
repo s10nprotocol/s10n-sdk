@@ -121,7 +121,7 @@ export class S10nSDK {
   }
 
   public subTokenManager(): Promise<string> {
-    return this._subManagerContract.subscriptionTokenManager();
+    return this._subManagerContract.subTokenManager();
   }
 
   public subInfoManager(): Promise<string> {
