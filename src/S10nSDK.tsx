@@ -6,6 +6,8 @@ import {
   subManagerAbi,
   subTokenManagerAbi,
   subInfoManagerAbi,
+  merchantTokenManagerAbi,
+  planManagerAbi,
 } from './constants';
 
 interface CreatePlanConf {
@@ -28,6 +30,8 @@ export class S10nSDK {
   public subscriptionTokenManager: string | null = null;
   private _subTokenManagerContract: Contract | null = null;
   private _subInfoManagerContract: Contract | null = null;
+  private _merchantTokenManager: Contract | null = null;
+  private _planManger: Contract | null = null;
 
   constructor(contract: string, signer: Signer | Provider) {
     this._signer = signer;
@@ -35,7 +39,7 @@ export class S10nSDK {
     this.init();
   }
 
-  async init() {
+  async initSubTokenManager() {
     const subTokenManagerAddress = await this.subTokenManager();
     this.subscriptionTokenManager = subTokenManagerAddress;
     this._subTokenManagerContract = new Contract(
@@ -43,14 +47,40 @@ export class S10nSDK {
       subTokenManagerAbi,
       this._signer
     );
+  }
+
+  async initSubInfoManager() {
     const subInfoManagerAddress = await this.subInfoManager();
     this._subInfoManagerContract = new Contract(
       subInfoManagerAddress,
       subInfoManagerAbi,
       this._signer
     );
+  }
+
+  async initMerchantManager() {
     const merchantManager = await this.merchantManager();
     this.merchantTokenManager = merchantManager;
+    this._merchantTokenManager = new Contract(
+      merchantManager,
+      merchantTokenManagerAbi,
+      this._signer
+    );
+  }
+
+  async initPlanManger() {
+    const planManagerAddress = await this.planManager();
+    this._planManger = new Contract(
+      planManagerAddress,
+      planManagerAbi,
+      this._signer
+    );
+  }
+
+  async init() {
+    await this.initSubTokenManager();
+    await this.initSubInfoManager();
+    await this.initMerchantManager();
   }
 
   public merchantManager(): Promise<string> {
@@ -150,8 +180,46 @@ export class S10nSDK {
     return this._signer;
   }
 
-  public getSubscriptionTokenUri(subscriptionTokenId: number): Promise<string> {
-    return this._subTokenManagerContract?.tokenURI(subscriptionTokenId);
+  public async getMerchantOwner(merchantTokenId: number) {
+    if (!this._merchantTokenManager) {
+      await this.initMerchantManager();
+    }
+    const owner = await this._merchantTokenManager?.ownerOf(merchantTokenId);
+    return owner;
+  }
+
+  public async getPlan(merchantTokenId: number, planIndex: number) {
+    if (!this._planManger) {
+      await this.initPlanManger();
+    }
+    const plan = await this._planManger?.getPlan(merchantTokenId, planIndex);
+    return plan
+      ? {
+          name: plan.name,
+          description: plan.description,
+          merchantTokenId: plan.merchantTokenId.toNumber(),
+          payeeAddress: plan.payeeAddress,
+          paymentToken: plan.paymentToken,
+          pricePerBillingPeriod: plan.pricePerBillingPeriod.toString(),
+          maxTermLength: plan.maxTermLength.toNumber(),
+          billingPeriod: plan.billingPeriod,
+          isSBT: plan.isSBT,
+          enabled: plan.enabled,
+          canResubscribe: plan.canResubscribe,
+        }
+      : null;
+  }
+
+  public async getSubscriptionTokenUri(
+    subscriptionTokenId: number
+  ): Promise<string> {
+    if (!this._subTokenManagerContract) {
+      await this.initSubTokenManager();
+    }
+    const tokenURI = await this._subTokenManagerContract?.tokenURI(
+      subscriptionTokenId
+    );
+    return tokenURI;
   }
 
   public async getSubInfo(
@@ -160,7 +228,7 @@ export class S10nSDK {
     [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, boolean]
   > {
     if (!this._subInfoManagerContract) {
-      await this.init();
+      await this.initSubInfoManager();
     }
     const result = await this._subInfoManagerContract?.getSubInfo(
       subscriptionTokenId
