@@ -11,8 +11,8 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
+    "start": "tsdx watch --entry src/index.ts --entry src/api/index.ts",
+    "build": "tsdx build --entry src/index.ts --entry src/api/index.ts",
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
