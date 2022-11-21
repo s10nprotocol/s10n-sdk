@@ -1,3 +1,9 @@
-export const getS10nAppConfig = async () => {
-  return fetch('https://app.s10n.io/api/v1/config').then((res) => res.json());
+export const getS10nAppConfig = async (
+  env: 'production' | 'testnet' = 'production'
+) => {
+  const baseUrl =
+    env === 'production'
+      ? 'https://app.s10n.io'
+      : 'https://app.testnet.s10n.io';
+  return fetch(`${baseUrl}/api/v1/config`).then((res) => res.json());
 };
