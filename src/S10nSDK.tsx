@@ -36,7 +36,6 @@ export class S10nSDK {
   constructor(contract: string, signer: Signer | Provider) {
     this._signer = signer;
     this._subManagerContract = new Contract(contract, subManagerAbi, signer);
-    this.init();
   }
 
   async initSubTokenManager() {
@@ -148,6 +147,10 @@ export class S10nSDK {
 
   public createSubscription(merchantId: number, planIndex: number) {
     return this._subManagerContract.createSubscription(merchantId, planIndex);
+  }
+
+  public acceptTransfer(subscriptionTokenId: number) {
+    return this._subManagerContract.acceptTransfer(subscriptionTokenId);
   }
 
   public subTokenManager(): Promise<string> {
