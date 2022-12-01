@@ -25,7 +25,7 @@ interface CreatePlanConf {
 
 export class S10nSDK {
   private _signer: Signer | Provider;
-  private _subManagerContract: Contract;
+  public _subManagerContract: Contract;
   public merchantTokenManager: string | null = null;
   public subscriptionTokenManager: string | null = null;
   private _subTokenManagerContract: Contract | null = null;
@@ -88,6 +88,10 @@ export class S10nSDK {
 
   public createMerchant(name: string, isSBT: boolean) {
     return this._subManagerContract.createMerchant(name, isSBT);
+  }
+
+  public createMerchantEstimateGas(name: string, isSBT: boolean) {
+    return this._subManagerContract.estimateGas.createMerchant(name, isSBT);
   }
 
   public updateMerchant(merchantId: number, name: string) {
