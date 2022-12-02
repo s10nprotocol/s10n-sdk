@@ -98,8 +98,30 @@ export class S10nSDK {
     return this._subManagerContract.createMerchant(merchantId, name);
   }
 
+  public updateMerchantEstimateGas(merchantId: number, name: string) {
+    return this._subManagerContract.estimateGas.createMerchant(
+      merchantId,
+      name
+    );
+  }
+
   public createPlan(opt: CreatePlanConf) {
     return this._subManagerContract.createPlan(
+      [
+        opt.merchantTokenId,
+        opt.billingPeriod,
+        opt.pricePerBillingPeriod,
+        opt.maxTermLength,
+        opt.isSBT ? 1 : 0,
+        opt.canResubscribe ? 1 : 0,
+      ],
+      [opt.paymentToken, opt.payeeAddress],
+      [opt.name, opt.desc]
+    );
+  }
+
+  public createPlanEstimateGas(opt: CreatePlanConf) {
+    return this._subManagerContract.estimateGas.createPlan(
       [
         opt.merchantTokenId,
         opt.billingPeriod,
@@ -117,8 +139,22 @@ export class S10nSDK {
     return this._subManagerContract.disablePlan(merchantTokenId, planIndex);
   }
 
+  public disablePlanEstimateGas(merchantTokenId: number, planIndex: number) {
+    return this._subManagerContract.estimateGas.disablePlan(
+      merchantTokenId,
+      planIndex
+    );
+  }
+
   public enablePlan(merchantTokenId: number, planIndex: number) {
     return this._subManagerContract.enablePlan(merchantTokenId, planIndex);
+  }
+
+  public enablePlanEstimateGas(merchantTokenId: number, planIndex: number) {
+    return this._subManagerContract.estimateGas.enablePlan(
+      merchantTokenId,
+      planIndex
+    );
   }
 
   public updatePlan(
@@ -129,6 +165,22 @@ export class S10nSDK {
     payeeAddress: string
   ) {
     return this._subManagerContract.updatePlan(
+      merchantTokenId,
+      planIndex,
+      name,
+      description,
+      payeeAddress
+    );
+  }
+
+  public updatePlanEstimateGas(
+    merchantTokenId: number,
+    planIndex: number,
+    name: string,
+    description: string,
+    payeeAddress: string
+  ) {
+    return this._subManagerContract.estimateGas.updatePlan(
       merchantTokenId,
       planIndex,
       name,
@@ -149,12 +201,31 @@ export class S10nSDK {
     return this._subManagerContract.cancelSubscription(subscriptionTokenId);
   }
 
+  public cancelSubscriptionEstimateGas(subscriptionTokenId: number) {
+    return this._subManagerContract.estimateGas.cancelSubscription(
+      subscriptionTokenId
+    );
+  }
+
   public createSubscription(merchantId: number, planIndex: number) {
     return this._subManagerContract.createSubscription(merchantId, planIndex);
   }
 
+  public createSubscriptionEstimateGas(merchantId: number, planIndex: number) {
+    return this._subManagerContract.estimateGas.createSubscription(
+      merchantId,
+      planIndex
+    );
+  }
+
   public acceptTransfer(subscriptionTokenId: number) {
     return this._subManagerContract.acceptTransfer(subscriptionTokenId);
+  }
+
+  public acceptTransferEstimateGas(subscriptionTokenId: number) {
+    return this._subManagerContract.estimateGas.acceptTransfer(
+      subscriptionTokenId
+    );
   }
 
   public subTokenManager(): Promise<string> {
