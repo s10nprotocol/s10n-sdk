@@ -83,7 +83,7 @@ export class S10nSDK {
   }
 
   public merchantManager(): Promise<string> {
-    return this._subManagerContract.merchantTokenManager();
+    return this._subManagerContract.getManagerAddress('merchantManager');
   }
 
   public createMerchant(name: string, isSBT: boolean) {
@@ -229,11 +229,11 @@ export class S10nSDK {
   }
 
   public subTokenManager(): Promise<string> {
-    return this._subManagerContract.subTokenManager();
+    return this._subManagerContract.getManagerAddress('subTokenManager');
   }
 
   public subInfoManager(): Promise<string> {
-    return this._subManagerContract.subInfoManager();
+    return this._subManagerContract.getManagerAddress('subInfoManager');
   }
 
   public getMerchantSubscriptionTotal(

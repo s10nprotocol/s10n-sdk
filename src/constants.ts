@@ -15,6 +15,7 @@ export const subManagerAbi = [
   'function planManager() view returns (address)',
   'function subTokenManager() view returns (address)',
   'function subInfoManager() view returns (address)',
+  'function getManagerAddress(string _managerName) view returns (address)',
 ];
 
 export const merchantTokenManagerAbi = [
